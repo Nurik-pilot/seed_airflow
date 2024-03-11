@@ -5,12 +5,12 @@
 
 ``` $ chmod +x src/entrypoint.sh ```
 
-``` $ docker-compose up ```
+``` $ docker compose up ```
 
 ### Run tests:
 In separate tab
 
-``` $ docker-compose exec web bash ``` - get into airflow_webserver container
+``` $ docker compose exec web bash ``` - get into airflow_webserver container
 
 ``` $ doit lint ``` - run lint
 
