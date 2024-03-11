@@ -1,0 +1,102 @@
+version: '3.7'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:16.1-alpine3.19
+    command: "
+      -c fsync=off
+      -c synchronous_commit=off
+      -c full_page_writes=off
+      -c max_wal_size=4096
+      -c checkpoint_timeout=86400
+    "
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    logging:
+      driver: none
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.12.12-alpine
+    logging:
+      driver: none
+    environment:
+      RABBITMQ_DEFAULT_VHOST: vhost
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: pass
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  minio:
+    container_name: minio
+    image: bitnami/minio:2024.1.29
+    environment:
+      MINIO_ROOT_USER: S3_ACCESS_KEY
+      MINIO_ROOT_PASSWORD: S3_SECRET_KEY
+      MINIO_DEFAULT_BUCKETS: seed
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  scheduler:
+    container_name: scheduler
+    build: ./
+    env_file:
+      - ./.env
+    volumes:
+      - ./src:/src:rw
+      - ./.env:/src/core/.env
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      PROCESS: AIRFLOW_SCHEDULER
+
+  consumer:
+    container_name: consumer
+    build: ./
+    env_file:
+      - ./.env
+    depends_on:
+      - scheduler
+    volumes:
+      - ./src:/src:rw
+      - ./.env:/src/core/.env
+    environment:
+      PROCESS: AIRFLOW_CONSUMER
+
+  web:
+    container_name: web
+    build: ./
+    env_file:
+      - ./.env
+    volumes:
+      - ./src:/src:rw
+      - ./.env:/src/core/.env
+    ports:
+      - "8000:8000"
+    environment:
+      PROCESS: AIRFLOW_WEBSERVER
+      task: "airflow tasks test"
+      dag: "airflow dags test"
+
+  flower:
+    container_name: flower
+    build: ./
+    depends_on:
+      - scheduler
+      - consumer
+      - web
+    env_file:
+      - ./.env
+    volumes:
+      - ./src:/src:rw
+      - ./.env:/src/core/.env
+    environment:
+      PROCESS: AIRFLOW_FLOWER
+    ports:
+      - "5555:5555"

@@ -1,0 +1,8 @@
+repos:
+  - repo: local
+    hooks:
+      - id: lint
+        name: lint
+        entry: "docker compose run -T --rm web doit lint"
+        language: system
+        pass_filenames: false
