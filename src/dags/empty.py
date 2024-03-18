@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, UTC
 from logging import getLogger
 
 from airflow import DAG
@@ -23,7 +23,8 @@ with DAG(
     dag_id='empty',
     schedule_interval='@daily',
     start_date=datetime(
-        year=2024, month=3, day=1,
+        year=2024, month=3,
+        day=1, tzinfo=UTC,
     ),
 ):
     first_task = EmptyOperator(

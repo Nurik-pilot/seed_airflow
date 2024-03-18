@@ -1,10 +1,13 @@
 from contextlib import suppress
 from json import dumps
-from typing import Dict
 
-from airflow.models import Connection, Variable
+from airflow.models import (
+    Connection, Variable,
+)
 from airflow.settings import Session
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import (
+    IntegrityError,
+)
 
 
 def setup_s3_connection() -> None:

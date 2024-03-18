@@ -42,11 +42,13 @@ mypy = 'mypy .'
 bandit = 'bandit -r . --exclude tests'
 blocklint = 'blocklint .'
 flake8 = 'flake8 .'
+ruff: str = 'ruff check .'
 
 safety = ' -i '.join(
     (
         'safety check',
-        '51668', '42194', '51457', '62582',
+        '51668', '42194',
+        '51457', '62582',
         '62583', '40459', '62019',
     ),
 )
@@ -132,6 +134,10 @@ def task_test(
     return generate(actions=(action,))
 
 
+def task_ruff() -> MetaData:
+    return generate(actions=(ruff,))
+
+
 def task_flake8() -> MetaData:
     return generate(actions=(flake8,))
 
@@ -159,7 +165,7 @@ def task_up() -> MetaData:
 def task_lint() -> MetaData:
     return generate(
         actions=(
-            flake8, mypy,
+            ruff, flake8, mypy,
             bandit, blocklint,
         ),
     )
@@ -181,8 +187,7 @@ def task_all() -> MetaData:
     full_run = full_test.format(**kwargs)
     return generate(
         actions=(
-            full_run, flake8,
-            mypy, bandit,
-            blocklint, outdated,
+            full_run, ruff, flake8, mypy,
+            bandit, blocklint, outdated,
         ),
     )

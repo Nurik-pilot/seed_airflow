@@ -1,15 +1,14 @@
 """
 Default configuration for the Airflow webserver
 """
-from os import path
+from pathlib import Path
 
 from flask_appbuilder.security.manager import (
     AUTH_DB,
 )
 
-basedir = path.abspath(
-    path.dirname(__file__),
-)
+current = Path(__file__)
+basedir = current.parent.resolve()
 
 WTF_CSRF_ENABLED: bool = True
 
