@@ -14,7 +14,8 @@ default_f = default_flake_runs
 full_test = ' '.join(
     (
         'pytest', '-v',
-        '--cov', '.', '--cov-report',
+        '--cov', '.',
+        '--cov-report',
         '{coverage_report_type}',
         '--cov-fail-under=100',
         '--numprocesses',
@@ -41,6 +42,7 @@ mypy = 'mypy .'
 bandit = 'bandit -r . --exclude tests'
 blocklint = 'blocklint .'
 flake8 = 'flake8 .'
+
 safety = ' -i '.join(
     (
         'safety check',
