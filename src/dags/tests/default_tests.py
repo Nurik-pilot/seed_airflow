@@ -18,7 +18,7 @@ def test_no_import_errors(
 def test_dags_count(
     dag_bag: DagBag,
 ) -> None:
-    assert len(dag_bag.dags) == 1
+    assert dag_bag.size() == 1
 
 
 def test_connection() -> None:
@@ -33,6 +33,8 @@ def test_connection() -> None:
         assert query.count() == 1
 
 
-def test_empty_dag(dag_bag: DagBag) -> None:
-    dag = dag_bag.dags['empty']
+def test_empty_dag(
+    dag_bag: DagBag,
+) -> None:
+    dag = dag_bag.get_dag(dag_id='empty')
     dag.test()

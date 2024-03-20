@@ -16,7 +16,13 @@ logger = getLogger(name=__name__)
 
 
 def print_hello_world() -> None:
-    logger.info(msg='hello world')
+    message = ' '.join(
+        (
+            'hello world by',
+            'PythonOperator',
+        ),
+    )
+    logger.info(msg=message)
 
 
 with DAG(
@@ -24,15 +30,22 @@ with DAG(
     schedule_interval='@daily',
     start_date=datetime(
         year=2024, month=3,
-        day=1, tzinfo=UTC,
+        day=20, tzinfo=UTC,
     ),
 ):
     first_task = EmptyOperator(
         task_id='first_task',
     )
+    bash_command = ' '.join(
+        (
+            'echo hello',
+            'world by',
+            'BashOperator',
+        ),
+    )
     second_task = BashOperator(
         task_id='second_task',
-        bash_command='echo hello world',
+        bash_command=bash_command,
     )
     third_task = PythonOperator(
         task_id='third_task',
