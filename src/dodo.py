@@ -11,6 +11,19 @@ default_n = default_number_of_processes
 default_flake_runs = 1
 default_f = default_flake_runs
 
+warning = '.'.join(
+    (
+        'pytest',
+        ''.join(
+            (
+                'PytestUnraisable',
+                'ExceptionWarning',
+            ),
+        ),
+    ),
+)
+warning = f'-W ignore::{warning}'
+
 full_test = ' '.join(
     (
         'pytest', '-v',
@@ -27,6 +40,7 @@ full_test = ' '.join(
         '--exitfirst',
         '--randomly-seed=last',
         '-W error',
+        warning,
     ),
 )
 

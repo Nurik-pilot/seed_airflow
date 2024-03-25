@@ -10,21 +10,17 @@ services:
       -c checkpoint_timeout=86400
     "
     environment:
-      POSTGRES_DB: db
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
-    logging:
-      driver: none
+      POSTGRES_DB: "db"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "pass"
 
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:3.12.12-alpine
-    logging:
-      driver: none
     environment:
-      RABBITMQ_DEFAULT_VHOST: vhost
-      RABBITMQ_DEFAULT_USER: user
-      RABBITMQ_DEFAULT_PASS: pass
+      RABBITMQ_DEFAULT_VHOST: "vhost"
+      RABBITMQ_DEFAULT_USER: "user"
+      RABBITMQ_DEFAULT_PASS: "pass"
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -33,9 +29,9 @@ services:
     container_name: minio
     image: bitnami/minio:2024.1.29
     environment:
-      MINIO_ROOT_USER: S3_ACCESS_KEY
-      MINIO_ROOT_PASSWORD: S3_SECRET_KEY
-      MINIO_DEFAULT_BUCKETS: seed
+      MINIO_ROOT_USER: "S3_ACCESS_KEY"
+      MINIO_ROOT_PASSWORD: "S3_SECRET_KEY"
+      MINIO_DEFAULT_BUCKETS: "seed"
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -52,7 +48,7 @@ services:
       - postgres
       - rabbitmq
     environment:
-      PROCESS: AIRFLOW_SCHEDULER
+      PROCESS: "AIRFLOW_SCHEDULER"
 
   consumer:
     container_name: consumer
@@ -65,7 +61,7 @@ services:
       - ./src:/src:rw
       - ./.env:/src/core/.env
     environment:
-      PROCESS: AIRFLOW_CONSUMER
+      PROCESS: "AIRFLOW_CONSUMER"
 
   web:
     container_name: web
@@ -78,7 +74,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      PROCESS: AIRFLOW_WEBSERVER
+      PROCESS: "AIRFLOW_WEBSERVER"
       task: "airflow tasks test"
       dag: "airflow dags test"
 
@@ -95,6 +91,6 @@ services:
       - ./src:/src:rw
       - ./.env:/src/core/.env
     environment:
-      PROCESS: AIRFLOW_FLOWER
+      PROCESS: "AIRFLOW_FLOWER"
     ports:
       - "5555:5555"

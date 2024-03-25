@@ -2,11 +2,9 @@ from airflow.models import DagBag
 from pytest import fixture
 
 
-@fixture()
+@fixture(scope='session')
 def dag_bag() -> DagBag:
-    instance = DagBag(
+    return DagBag(
         dag_folder='/src/dags/',
         include_examples=False,
     )
-    instance.sync_to_db()
-    return instance

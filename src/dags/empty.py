@@ -27,7 +27,7 @@ def print_hello_world() -> None:
 
 with DAG(
     dag_id='empty',
-    schedule_interval='@daily',
+    schedule='@daily',
     start_date=datetime(
         year=2024, month=3,
         day=20, tzinfo=UTC,
