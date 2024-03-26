@@ -1,7 +1,7 @@
 FROM python:3.11.8-slim
 
 ARG FIRST_PART="celery,postgres,sentry"
-ARG SECOND_PART="s3,cncf.kubernetes"
+ARG SECOND_PART="s3,cncf.kubernetes,redis"
 ARG EXTENSIONS="$FIRST_PART,$SECOND_PART"
 ARG DOMAIN="raw.githubusercontent.com"
 ARG BASE_URL="https://$DOMAIN/apache/airflow"

@@ -5,7 +5,7 @@ from doit import task_params
 default_coverage_report_type = 'term-missing'
 default_c = default_coverage_report_type
 
-default_number_of_processes = 1
+default_number_of_processes = 2
 default_n = default_number_of_processes
 
 default_flake_runs = 1
@@ -54,7 +54,7 @@ single_test = ' '.join(
 
 mypy = 'mypy .'
 bandit = 'bandit -r . --exclude tests'
-blocklint = 'blocklint .'
+blocklint = 'blocklint . --skip-files=airflow.cfg'
 flake8 = 'flake8 .'
 ruff: str = 'ruff check .'
 

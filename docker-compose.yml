@@ -36,6 +36,10 @@ services:
       - "9000:9000"
       - "9001:9001"
 
+  redis:
+    container_name: redis
+    image: redis:7.2.4-alpine3.19
+
   scheduler:
     container_name: scheduler
     build: ./
