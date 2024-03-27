@@ -1,7 +1,8 @@
 from airflow.models import (
-    DagBag, Connection,
+    DagBag, Connection, DagRun,
 )
 from airflow.settings import Session
+from airflow.utils.state import DagRunState
 from sqlalchemy.orm import Query
 
 from setup import setup_s3_connection
@@ -36,5 +37,11 @@ def test_connection() -> None:
 def test_empty_dag(
     dag_bag: DagBag,
 ) -> None:
-    dag = dag_bag.get_dag(dag_id='empty')
-    dag.test()
+    kwargs = {
+        'dag_id': 'empty',
+    }
+    dag = dag_bag.get_dag(**kwargs)
+    dag_run: DagRun = dag.test()
+    state = dag_run.state
+    successful = DagRunState.SUCCESS
+    assert state == successful
