@@ -365,13 +365,13 @@ dev = ["coverage", "hypothesis", "hypothesmith (>=0.2)", "pre-commit", "pytest",
 
 [[package]]
 name = "flake8-builtins"
-version = "2.2.0"
+version = "2.3.0"
 description = "Check for python builtins being used as variables or parameters"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "flake8_builtins-2.2.0-py3-none-any.whl", hash = "sha256:7ee5766d9c60e5d579dfda84e65c6d0e6c26005f6f59cb9bf722462d7987a807"},
-    {file = "flake8_builtins-2.2.0.tar.gz", hash = "sha256:392d5af3a0720c5a863aa93dc47f48c879081345a143fe9f20d995fe9ff5686a"},
+    {file = "flake8_builtins-2.3.0-py3-none-any.whl", hash = "sha256:2db907d96d2817beb3c861d46fad8dde647e76894c6af88a6cc91dd7c3c58bc6"},
+    {file = "flake8_builtins-2.3.0.tar.gz", hash = "sha256:c3669520104233356c1909389d1b5016107c93f4c494922e829fd3c65c10c81c"},
 ]
 
 [package.dependencies]
@@ -727,13 +727,13 @@ files = [
 
 [[package]]
 name = "ipython"
-version = "8.22.2"
+version = "8.23.0"
 description = "IPython: Productive Interactive Computing"
 optional = false
 python-versions = ">=3.10"
 files = [
-    {file = "ipython-8.22.2-py3-none-any.whl", hash = "sha256:3c86f284c8f3d8f2b6c662f885c4889a91df7cd52056fd02b7d8d6195d7f56e9"},
-    {file = "ipython-8.22.2.tar.gz", hash = "sha256:2dcaad9049f9056f1fef63514f176c7d41f930daa78d05b82a176202818f2c14"},
+    {file = "ipython-8.23.0-py3-none-any.whl", hash = "sha256:07232af52a5ba146dc3372c7bf52a0f890a23edf38d77caef8d53f9cdc2584c1"},
+    {file = "ipython-8.23.0.tar.gz", hash = "sha256:7468edaf4f6de3e1b912e57f66c241e6fd3c7099f2ec2136e239e142e800274d"},
 ]
 
 [package.dependencies]
@@ -746,12 +746,14 @@ prompt-toolkit = ">=3.0.41,<3.1.0"
 pygments = ">=2.4.0"
 stack-data = "*"
 traitlets = ">=5.13.0"
+typing-extensions = {version = "*", markers = "python_version < \"3.12\""}
 
 [package.extras]
-all = ["ipython[black,doc,kernel,nbconvert,nbformat,notebook,parallel,qtconsole,terminal]", "ipython[test,test-extra]"]
+all = ["ipython[black,doc,kernel,matplotlib,nbconvert,nbformat,notebook,parallel,qtconsole]", "ipython[test,test-extra]"]
 black = ["black"]
 doc = ["docrepr", "exceptiongroup", "ipykernel", "ipython[test]", "matplotlib", "setuptools (>=18.5)", "sphinx (>=1.3)", "sphinx-rtd-theme", "sphinxcontrib-jquery", "stack-data", "typing-extensions"]
 kernel = ["ipykernel"]
+matplotlib = ["matplotlib"]
 nbconvert = ["nbconvert"]
 nbformat = ["nbformat"]
 notebook = ["ipywidgets", "notebook"]
