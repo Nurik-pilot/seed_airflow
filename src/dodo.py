@@ -1,4 +1,5 @@
-from typing import TypeAlias
+from pathlib import Path
+from typing import TypeAlias, Callable, Generator
 
 from doit import task_params
 
@@ -71,10 +72,25 @@ outdated = 'poetry show --outdated'
 
 up = 'poetry update'
 
+export = ' '.join(
+    (
+        'poetry export',
+        '--format requirements.txt',
+        '--output requirements.txt',
+        '--with dev',
+        '--without-hashes',
+        '--without-urls',
+    ),
+)
+
 default_verbosity = 2
 
-Actions: TypeAlias = tuple[str, ...]
-MetaData: TypeAlias = dict[str, Actions | int]
+Actions: TypeAlias = tuple[
+    str | Callable[[], None], ...,
+]
+MetaData: TypeAlias = dict[
+    str, Actions | int,
+]
 
 
 def generate(
@@ -176,6 +192,10 @@ def task_up() -> MetaData:
     return generate(actions=(up,))
 
 
+def task_outdated() -> MetaData:
+    return generate(actions=(outdated,))
+
+
 def task_lint() -> MetaData:
     return generate(
         actions=(
@@ -185,8 +205,36 @@ def task_lint() -> MetaData:
     )
 
 
-def task_outdated() -> MetaData:
-    return generate(actions=(outdated,))
+def fix_requirements() -> None:
+    path = Path('requirements.txt')
+    lines: list[str]
+    truncated: Generator[
+        str, None, None,
+    ]
+    divided: Generator[
+        list[str], None, None,
+    ]
+    fixed: str
+    with path.open(mode='r+') as file:
+        lines = file.readlines()
+        file.seek(0)
+        file.truncate()
+        divided = (
+            line.split(
+                ' ', 1,
+            ) for line in lines
+        )
+        truncated = (
+            next(iter(line))
+            for line in divided
+        )
+        fixed = '\n'.join(truncated)
+        file.write(fixed + '\n')
+
+
+def task_export() -> MetaData:
+    actions = (export, fix_requirements,)
+    return generate(actions=actions)
 
 
 def task_all() -> MetaData:

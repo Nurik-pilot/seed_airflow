@@ -12,17 +12,6 @@ files = [
 ]
 
 [[package]]
-name = "astpretty"
-version = "3.0.0"
-description = "Pretty print the output of python stdlib `ast.parse`."
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "astpretty-3.0.0-py2.py3-none-any.whl", hash = "sha256:15bfd47593667169485a1fa7938b8de9445b11057d6f2b6e214b2f70667f94b6"},
-    {file = "astpretty-3.0.0.tar.gz", hash = "sha256:b08c95f32e5994454ea99882ff3c4a0afc8254c38998a0ed4b479dba448dc581"},
-]
-
-[[package]]
 name = "asttokens"
 version = "2.4.1"
 description = "Annotate AST trees with source code positions"
@@ -466,21 +455,6 @@ files = [
 
 [package.dependencies]
 flake8 = ">=3.0.0"
-
-[[package]]
-name = "flake8-expression-complexity"
-version = "0.0.11"
-description = "A flake8 extension that checks expressions complexity"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "flake8_expression_complexity-0.0.11-py3-none-any.whl", hash = "sha256:b56bac37f7dd5d3d102a7111c89f6579c2cbd897b868147794c9ed12aadc627c"},
-    {file = "flake8_expression_complexity-0.0.11.tar.gz", hash = "sha256:4dd8909fecbc20f53814cdcef9d0b04f61532764278d9b6e8026686812e96631"},
-]
-
-[package.dependencies]
-astpretty = "*"
-flake8 = "*"
 
 [[package]]
 name = "flake8-functions"
@@ -1498,4 +1472,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "d7c960c46efc50460e50e730318f4d95bc3aca7281c53598c3f34c3f21f61745"
+content-hash = "5a5d5b4f572c618c8b610b5fc841634f6cb0132839f0639826bee77fd0174217"

@@ -9,5 +9,3 @@ statistics = True
 jobs = 4
 
 max-cognitive-complexity = 2
-
-max-expression-complexity = 4
