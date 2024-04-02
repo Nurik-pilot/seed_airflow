@@ -26,7 +26,10 @@ def test_dags_count(
 
 def test_connection() -> None:
     query: Query
-    with Session() as session, session.begin():
+    with (
+        Session() as session,
+        session.begin(),
+    ):
         query = session.query(Connection)
         query.delete()
         assert query.count() == 0
