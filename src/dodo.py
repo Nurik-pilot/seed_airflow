@@ -70,16 +70,37 @@ safety = ' -i '.join(
 
 outdated = 'poetry show --outdated'
 
-up = 'poetry update'
-
-export = ' '.join(
+up = ' && '.join(
     (
-        'poetry export',
-        '--format requirements.txt',
-        '--output requirements.txt',
-        '--with dev',
-        '--without-hashes',
-        '--without-urls',
+        ' '.join(
+            (
+                'poetry self add',
+                'poetry-plugin-up',
+            ),
+        ),
+        'poetry update',
+        'poetry up --latest',
+    ),
+)
+
+export = ' && '.join(
+    (
+        ' '.join(
+            (
+                'poetry self add',
+                'poetry-plugin-export',
+            ),
+        ),
+        ' '.join(
+            (
+                'poetry export',
+                '--format requirements.txt',
+                '--output requirements.txt',
+                '--with dev',
+                '--without-hashes',
+                '--without-urls',
+            ),
+        ),
     ),
 )
 
