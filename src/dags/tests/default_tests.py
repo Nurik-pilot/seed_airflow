@@ -5,6 +5,7 @@ from airflow.settings import Session
 from airflow.utils.state import (
     DagRunState,
 )
+from pytest import mark
 from sqlalchemy.orm import Query
 
 from setup import setup_s3_connection
@@ -39,10 +40,27 @@ def test_connection() -> None:
         assert query.count() == 1
 
 
+warning = '::'.join(
+    (
+        'ignore', '.'.join(
+            (
+                'pytest', ''.join(
+                    (
+                        'PytestUnraisable',
+                        'ExceptionWarning',
+                    ),
+                ),
+            ),
+        ),
+    ),
+)
+
+
+@mark.filterwarnings(warning)
 def test_empty_dag(
     dag_bag: DagBag,
 ) -> None:
-    kwargs = {
+    kwargs: dict[str, str] = {
         'dag_id': 'empty',
     }
     dag = dag_bag.get_dag(**kwargs)

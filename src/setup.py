@@ -43,15 +43,13 @@ def setup_s3_connection() -> None:
         password=password,
         extra=extra,
     )
-    with suppress(
-        IntegrityError,
-    ), Session() as session, session.begin():
+    with (
+        suppress(IntegrityError),
+        Session() as session,
+        session.begin(),
+    ):
         session.add(instance=connection)
 
 
-def main() -> None:
-    setup_s3_connection()
-
-
 if __name__ == '__main__':
-    main()
+    setup_s3_connection()

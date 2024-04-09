@@ -1,29 +1,15 @@
 from pathlib import Path
-from typing import TypeAlias, Callable, Generator
+from typing import (
+    Callable, Generator,
+)
 
 from doit import task_params
 
-default_coverage_report_type = 'term-missing'
-default_c = default_coverage_report_type
+default_c = 'term-missing'
 
-default_number_of_processes = 2
-default_n = default_number_of_processes
+default_n = 2
 
-default_flake_runs = 1
-default_f = default_flake_runs
-
-warning = '.'.join(
-    (
-        'pytest',
-        ''.join(
-            (
-                'PytestUnraisable',
-                'ExceptionWarning',
-            ),
-        ),
-    ),
-)
-warning = f'-W ignore::{warning}'
+default_f = 1
 
 full_test = ' '.join(
     (
@@ -41,30 +27,34 @@ full_test = ' '.join(
         '--exitfirst',
         '--randomly-seed=last',
         '-W error',
-        warning,
     ),
 )
 
 single_test = ' '.join(
     (
-        'pytest', '-vs',
+        'pytest', '-vs', '{target}',
         '--disable-pytest-warnings',
-        '{target}',
     ),
 )
 
 mypy = 'mypy .'
 bandit = 'bandit -r . --exclude tests'
-blocklint = 'blocklint . --skip-files=airflow.cfg'
+
+blocklint = ' '.join(
+    (
+        'blocklint .',
+        '--skip-files',
+        'airflow.cfg',
+    ),
+)
 flake8 = 'flake8 .'
 ruff: str = 'ruff check .'
 
 safety = ' -i '.join(
     (
         'safety check',
-        '51457', '65647', '65278',
-        '65212', '62019', '42194',
-        '51668',
+        '51457', '62019',
+        '42194', '51668',
     ),
 )
 
@@ -87,7 +77,7 @@ export = ' && '.join(
     (
         ' '.join(
             (
-                'poetry self add',
+                'poetry', 'self', 'add',
                 'poetry-plugin-export',
             ),
         ),
@@ -106,10 +96,11 @@ export = ' && '.join(
 
 default_verbosity = 2
 
-Actions: TypeAlias = tuple[
-    str | Callable[[], None], ...,
-]
-MetaData: TypeAlias = dict[
+type Command = str | Callable[[], None]
+
+type Actions = tuple[Command, ...]
+
+type MetaData = dict[
     str, Actions | int,
 ]
 
@@ -220,8 +211,9 @@ def task_outdated() -> MetaData:
 def task_lint() -> MetaData:
     return generate(
         actions=(
-            ruff, flake8, mypy,
-            bandit, blocklint,
+            ruff, flake8,
+            mypy, bandit,
+            blocklint, safety,
         ),
     )
 
@@ -270,7 +262,8 @@ def task_all() -> MetaData:
     full_run = full_test.format(**kwargs)
     return generate(
         actions=(
-            full_run, ruff, flake8, mypy,
-            bandit, blocklint, outdated,
+            full_run, ruff, flake8,
+            mypy, bandit, blocklint,
+            safety, outdated,
         ),
     )
