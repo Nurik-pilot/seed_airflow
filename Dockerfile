@@ -1,4 +1,4 @@
-FROM python:3.11.8-slim
+FROM python:3.12.2-slim
 
 ARG FIRST_PART="celery,postgres,sentry"
 ARG SECOND_PART="s3,cncf.kubernetes,redis"
@@ -6,8 +6,8 @@ ARG EXTENSIONS="$FIRST_PART,$SECOND_PART"
 ARG DOMAIN="https://raw.githubusercontent.com"
 ARG URI="apache/airflow"
 ARG BASE_URL="$DOMAIN/$URI"
-ARG AIRFLOW_VERSION="2.8.4"
-ARG PYTHON_VERSION="3.11"
+ARG AIRFLOW_VERSION="2.9.0"
+ARG PYTHON_VERSION="3.12"
 ARG FIRST="constraints-$AIRFLOW_VERSION"
 ARG SECOND="constraints-$PYTHON_VERSION"
 ARG FILEPATH="$FIRST/$SECOND.txt"

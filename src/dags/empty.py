@@ -52,4 +52,9 @@ with DAG(
         python_callable=print_hello_world,
     )
 
-    first_task >> second_task >> third_task
+    first_task.set_downstream(
+        task_or_task_list=second_task,
+    )
+    second_task.set_downstream(
+        task_or_task_list=third_task,
+    )
