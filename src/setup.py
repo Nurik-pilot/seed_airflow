@@ -1,5 +1,5 @@
 from contextlib import suppress
-from json import dumps
+from orjson import dumps
 
 from airflow.models import (
     Connection, Variable,
@@ -35,8 +35,12 @@ def setup_s3_connection() -> None:
         'endpoint_url': host,
         'region_name': region,
     }
-    extra: str = dumps(obj=obj)
-    connection: Connection = Connection(
+    encoded: bytes = dumps(obj)
+    extra: str = encoded.decode(
+        encoding='utf-8',
+    )
+    connection: Connection
+    connection = Connection(
         conn_id=conn_id,
         conn_type=conn_type,
         login=login,
