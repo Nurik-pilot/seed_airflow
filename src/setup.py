@@ -1,10 +1,12 @@
 from contextlib import suppress
-from orjson import dumps
 
 from airflow.models import (
     Connection, Variable,
 )
-from airflow.settings import Session
+from airflow.settings import (
+    Session,
+)
+from orjson import dumps
 from sqlalchemy.exc import (
     IntegrityError,
 )
@@ -52,7 +54,9 @@ def setup_s3_connection() -> None:
         Session() as session,
         session.begin(),
     ):
-        session.add(instance=connection)
+        session.add(
+            instance=connection,
+        )
 
 
 if __name__ == '__main__':
