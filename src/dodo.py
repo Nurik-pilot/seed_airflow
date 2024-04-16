@@ -81,6 +81,7 @@ export = ' && '.join(
                 'poetry-plugin-export',
             ),
         ),
+        'rm --force requirements.txt',
         ' '.join(
             (
                 'poetry export',
@@ -220,29 +221,27 @@ def task_lint() -> MetaData:
 
 def fix_requirements() -> None:
     path = Path('requirements.txt')
+    text: str = path.read_text()
     lines: list[str]
-    truncated: Generator[
-        str, None, None,
-    ]
+    lines = text.splitlines()
     divided: Generator[
         list[str], None, None,
     ]
-    fixed: str
-    with path.open(mode='r+') as file:
-        lines = file.readlines()
-        file.seek(0)
-        file.truncate()
-        divided = (
-            line.split(
-                ' ', 1,
-            ) for line in lines
-        )
-        truncated = (
-            next(iter(line))
-            for line in divided
-        )
-        fixed = '\n'.join(truncated)
-        file.write(fixed + '\n')
+    divided = (
+        line.split(
+            ' ', 1,
+        ) for line in lines
+    )
+    truncated: Generator[
+        str, None, None,
+    ]
+    truncated = (
+        next(iter(line))
+        for line in divided
+    )
+    fixed: str = '\n'.join(truncated)
+    data: str = fixed + '\n'
+    path.write_text(data=data)
 
 
 def task_export() -> MetaData:
