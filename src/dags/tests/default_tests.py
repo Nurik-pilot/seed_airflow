@@ -45,7 +45,7 @@ def test_connection() -> None:
         assert query.count() == 1
 
 
-warning = '::'.join(
+warning: str = '::'.join(
     (
         'ignore', '.'.join(
             (
@@ -65,11 +65,10 @@ warning = '::'.join(
 def test_empty_dag(
     dag_bag: DagBag,
 ) -> None:
-    kwargs: dict[str, str] = {
-        'dag_id': 'empty',
-    }
     dag: DAG
-    dag = dag_bag.get_dag(**kwargs)
+    dag = dag_bag.get_dag(
+        dag_id='empty',
+    )
     dag_run: DagRun = dag.test()
     success = DagRunState.SUCCESS
     assert dag_run.state == success
