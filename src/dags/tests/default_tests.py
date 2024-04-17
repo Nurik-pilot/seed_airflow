@@ -1,3 +1,4 @@
+from airflow import DAG
 from airflow.models import (
     DagBag, DagRun, Connection,
 )
@@ -63,6 +64,7 @@ def test_empty_dag(
     kwargs: dict[str, str] = {
         'dag_id': 'empty',
     }
+    dag: DAG
     dag = dag_bag.get_dag(**kwargs)
     dag_run: DagRun = dag.test()
     success = DagRunState.SUCCESS
