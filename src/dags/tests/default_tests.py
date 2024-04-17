@@ -32,12 +32,16 @@ def test_connection() -> None:
         Session() as session,
         session.begin(),
     ):
-        query = session.query(Connection)
+        query = session.query(
+            Connection,
+        )
         query.delete()
         assert query.count() == 0
     setup_s3_connection()
     with Session() as session:
-        query = session.query(Connection)
+        query = session.query(
+            Connection,
+        )
         assert query.count() == 1
 
 
