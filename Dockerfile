@@ -1,4 +1,4 @@
-FROM python:3.12.2-slim
+FROM python:3.12.3-slim
 
 ARG FIRST_PART="celery,postgres,sentry"
 ARG SECOND_PART="s3,cncf.kubernetes,redis"
@@ -29,14 +29,12 @@ ADD \
 RUN apt update \
     && apt install --yes \
     apt-utils gcc g++ \
-    libpq-dev \
-    procps \
+    libpq-dev procps \
     netcat-traditional \
 # Set timezone
     && echo "UTC" > /etc/timezone \
 # Upgrade pip
-    && pip install \
-    --upgrade pip \
+    && pip install --upgrade pip \
 # Add project dependencies
     && pip install \
     apache-airflow[$EXTENSIONS]==$AIRFLOW_VERSION \
