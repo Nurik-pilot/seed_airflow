@@ -1,16 +1,21 @@
 #!/bin/bash
 # No more than 100 lines of code
 wait_for () {
-    while ! nc -z "$1" "$2"; do sleep 1; done;
-    echo "$1:$2 accepts connections!^_^"
+    while ! nc -z "$1" "$2"
+    do
+      sleep 1
+    done
+    echo "$1:$2 is ready!^_^"
 }
 wait_backing_services () {
   wait_for "${DB_HOST}" "${DB_PORT}"
   wait_for "${BROKER_HOST}" "${BROKER_PORT}"
 }
 remove_useless () {
-  rm -rf /src/logs celerybeat-schedule \
-  airflow-webserver.pid airflow-worker.pid
+  rm -rf /src/logs \
+  celerybeat-schedule \
+  airflow-webserver.pid \
+  airflow-worker.pid
 }
 
 remove_useless
@@ -20,23 +25,29 @@ echo "env variables are populated!^_^"
 
 case "$PROCESS" in
 "AIRFLOW_WEBSERVER")
-    if [ "$ENV" == "LOCAL" ]; then
+    if [ "$ENV" == "LOCAL" ]
+    then
       wait_backing_services
       poetry install --no-root
     fi
     airflow db migrate
-    if [ "$ENV" == "LOCAL" ]; then
+    if [ "$ENV" == "LOCAL" ]
+    then
       python setup.py
       airflow users create \
-      --username 1 --firstname 1 \
-      --lastname 1 --role Admin \
-      --email asd@asd.asd --password 1
+      --username 1 \
+      --firstname 1 \
+      --lastname 1 \
+      --role Admin \
+      --email asd@asd.asd \
+      --password 1
     fi
     airflow webserver \
     --pid /tmp/airflow-webserver.pid
     ;;
 "AIRFLOW_SCHEDULER")
-    if [ "$ENV" == "LOCAL" ]; then
+    if [ "$ENV" == "LOCAL" ]
+    then
       wait_backing_services
       wait_for web 8000
       poetry install --no-root
@@ -46,7 +57,8 @@ case "$PROCESS" in
     airflow scheduler
     ;;
 "AIRFLOW_CONSUMER")
-    if [ "$ENV" == "LOCAL" ]; then
+    if [ "$ENV" == "LOCAL" ]
+    then
       wait_backing_services
       wait_for web 8000
       poetry install --no-root
@@ -55,7 +67,8 @@ case "$PROCESS" in
     --pid /tmp/airflow-worker.pid
     ;;
 "AIRFLOW_FLOWER")
-    if [ "$ENV" == "LOCAL" ]; then
+    if [ "$ENV" == "LOCAL" ]
+    then
       wait_backing_services
       wait_for web 8000
       poetry install --no-root
@@ -68,9 +81,12 @@ case "$PROCESS" in
     airflow db migrate \
     && python setup.py \
     && airflow users create \
-    --username 1 --password 1 \
-    --firstname 1 --lastname 1 \
-    --email asd@asd.asd --role Admin \
+    --username 1 \
+    --password 1 \
+    --firstname 1 \
+    --lastname 1 \
+    --email asd@asd.asd \
+    --role Admin \
     && doit test \
     --number_of_processes 2 \
     --coverage_report_path \
@@ -78,11 +94,14 @@ case "$PROCESS" in
     && doit lint
     ;;
 "SCAN")
-    base_url="https://raw.githubusercontent.com"
-    url="$base_url"/anchore/grype/main/install.sh
+    domain="raw.githubusercontent.com"
+    host="https://$domain"
+    path="anchore/grype/main/install.sh"
+    url=$host/$path
     doit safety \
     && apt install --yes curl \
-    && curl -sSfL $url | sh -s -- -b /usr/local/bin \
+    && curl -sSfL $url >> install.sh \
+    && sh install.sh -b /usr/local/bin \
     && grype --fail-on CRITICAL .
     ;;
 *)
