@@ -7,7 +7,7 @@ from doit import task_params
 
 default_c = 'term-missing'
 
-default_n = 2
+default_n = 1
 
 default_f = 1
 
@@ -106,7 +106,7 @@ type MetaData = dict[
 ]
 
 
-def generate(
+def metadata_from(
     actions: Actions,
 ) -> MetaData:
     return {
@@ -157,14 +157,25 @@ def task_test(
         f'xml:{coverage_report_path}',
     )
     first = 'coverage_report_type'
-    second = 'number_of_processes'
-    third = 'flake_runs'
-    kwargs = {
+    coverage_kwargs = {
         first: report_type,
+    }
+    second = 'number_of_processes'
+    parallel_kwargs = {
         second: number_of_processes,
+    }
+    third = 'flake_runs'
+    flaky_kwargs = {
         third: flake_runs,
     }
-    full_run = full_test.format(**kwargs)
+    kwargs = {
+        **coverage_kwargs,
+        **parallel_kwargs,
+        **flaky_kwargs,
+    }
+    full_run = full_test.format(
+        **kwargs,
+    )
     actions: dict[str, str] = {
         '': full_run,
     }
@@ -174,43 +185,45 @@ def task_test(
     action: str = actions.get(
         target, single_run,
     )
-    return generate(actions=(action,))
+    return metadata_from(
+        actions=(action,),
+    )
 
 
 def task_ruff() -> MetaData:
-    return generate(actions=(ruff,))
+    return metadata_from(actions=(ruff,))
 
 
 def task_flake8() -> MetaData:
-    return generate(actions=(flake8,))
+    return metadata_from(actions=(flake8,))
 
 
 def task_mypy() -> MetaData:
-    return generate(actions=(mypy,))
+    return metadata_from(actions=(mypy,))
 
 
 def task_bandit() -> MetaData:
-    return generate(actions=(bandit,))
+    return metadata_from(actions=(bandit,))
 
 
 def task_safety() -> MetaData:
-    return generate(actions=(safety,))
+    return metadata_from(actions=(safety,))
 
 
 def task_blocklint() -> MetaData:
-    return generate(actions=(blocklint,))
+    return metadata_from(actions=(blocklint,))
 
 
 def task_up() -> MetaData:
-    return generate(actions=(up,))
+    return metadata_from(actions=(up,))
 
 
 def task_outdated() -> MetaData:
-    return generate(actions=(outdated,))
+    return metadata_from(actions=(outdated,))
 
 
 def task_lint() -> MetaData:
-    return generate(
+    return metadata_from(
         actions=(
             ruff, flake8,
             mypy, bandit,
@@ -246,7 +259,7 @@ def fix_requirements() -> None:
 
 def task_export() -> MetaData:
     actions = (export, fix_requirements,)
-    return generate(actions=actions)
+    return metadata_from(actions=actions)
 
 
 def task_all() -> MetaData:
@@ -259,7 +272,7 @@ def task_all() -> MetaData:
         third: default_f,
     }
     full_run = full_test.format(**kwargs)
-    return generate(
+    return metadata_from(
         actions=(
             full_run, ruff, flake8,
             mypy, bandit, blocklint,

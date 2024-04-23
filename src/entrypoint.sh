@@ -42,8 +42,8 @@ case "$PROCESS" in
       --email asd@asd.asd \
       --password 1
     fi
-    airflow webserver \
-    --pid /tmp/airflow-webserver.pid
+    airflow webserver --pid \
+    /tmp/airflow-webserver.pid
     ;;
 "AIRFLOW_SCHEDULER")
     if [ "$ENV" == "LOCAL" ]
@@ -95,14 +95,15 @@ case "$PROCESS" in
     ;;
 "SCAN")
     domain="raw.githubusercontent.com"
-    host="https://$domain"
-    path="anchore/grype/main/install.sh"
-    url=$host/$path
+    path="anchore/grype/main"
+    file="install.sh"
+    url="https://$domain/$path/$file"
+    echo "url: $url"
     doit safety \
     && apt install --yes curl \
-    && curl -sSfL $url >> install.sh \
+    && curl -sSfL $url >> $file \
     && sh install.sh -b /usr/local/bin \
-    && grype --fail-on CRITICAL .
+    && grype . --fail-on CRITICAL
     ;;
 *)
     echo "NO PROCESS SPECIFIED!>_<"
