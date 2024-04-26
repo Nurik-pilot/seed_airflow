@@ -77,16 +77,29 @@ export = ' && '.join(
     (
         ' '.join(
             (
-                'poetry', 'self', 'add',
-                'poetry-plugin-export',
+                'poetry', 'self',
+                'add', '-'.join(
+                    (
+                        'poetry',
+                        'plugin',
+                        'export',
+                    ),
+                ),
             ),
         ),
-        'rm --force requirements.txt',
+        ' '.join(
+            (
+                'rm --force',
+                'requirements.txt',
+            ),
+        ),
         ' '.join(
             (
                 'poetry export',
-                '--format requirements.txt',
-                '--output requirements.txt',
+                '--format',
+                'requirements.txt',
+                '--output',
+                'requirements.txt',
                 '--with dev',
                 '--without-hashes',
                 '--without-urls',
@@ -211,7 +224,9 @@ def task_safety() -> MetaData:
 
 
 def task_blocklint() -> MetaData:
-    return metadata_from(actions=(blocklint,))
+    return metadata_from(
+        actions=(blocklint,),
+    )
 
 
 def task_up() -> MetaData:
@@ -219,7 +234,9 @@ def task_up() -> MetaData:
 
 
 def task_outdated() -> MetaData:
-    return metadata_from(actions=(outdated,))
+    return metadata_from(
+        actions=(outdated,),
+    )
 
 
 def task_lint() -> MetaData:

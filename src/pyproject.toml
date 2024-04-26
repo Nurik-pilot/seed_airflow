@@ -79,7 +79,7 @@ authors = [
 [tool.poetry.dependencies]
 python = "^3.12"
 ipython = "^8.23.0"
-virtualenv = "^20.25.3"
+virtualenv = "^20.26.0"
 wheel = "^0.43.0"
 orjson = "^3.10.1"
 
@@ -118,7 +118,7 @@ pytest-xdist = "^3.5.0"
 pytest-randomly = "^3.15.0"
 pytest-timeout = "^2.3.1"
 pytest-flakefinder = "^1.1.0"
-mypy = "^1.9.0"
+mypy = "^1.10.0"
 blocklint = "^0.2.4"
 doit = "^0.36.0"
 ruff = "^0.4.0"

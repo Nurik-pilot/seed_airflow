@@ -24,4 +24,6 @@ RATELIMIT_STORAGE_URI = environ.get('RATELIMIT_STORAGE_URI')
 
 @current_app.before_request
 def print_custom_message() -> None:
-    logger.info('Executing before every request')
+    logger.info(
+        msg='Executing before every request',
+    )

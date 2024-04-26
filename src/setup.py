@@ -1,4 +1,5 @@
 from contextlib import suppress
+from logging import getLogger
 
 from airflow.models import (
     Connection, Variable,
@@ -10,6 +11,8 @@ from orjson import dumps
 from sqlalchemy.exc import (
     IntegrityError,
 )
+
+logger = getLogger(name=__name__)
 
 
 def setup_s3_connection() -> None:
@@ -57,6 +60,10 @@ def setup_s3_connection() -> None:
         session.add(
             instance=connection,
         )
+    logger.info(
+        '%s connection created',
+        conn_id,
+    )
 
 
 if __name__ == '__main__':

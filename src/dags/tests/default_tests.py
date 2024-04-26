@@ -9,6 +9,9 @@ from airflow.utils.state import (
 from pytest import mark
 from sqlalchemy.orm import Query
 
+from dags.tests.ignored_warnings import (
+    pytest_warning,
+)
 from setup import setup_s3_connection
 
 
@@ -45,23 +48,9 @@ def test_connection() -> None:
         assert query.count() == 1
 
 
-warning: str = '::'.join(
-    (
-        'ignore', '.'.join(
-            (
-                'pytest', ''.join(
-                    (
-                        'PytestUnraisable',
-                        'ExceptionWarning',
-                    ),
-                ),
-            ),
-        ),
-    ),
+@mark.filterwarnings(
+    pytest_warning,
 )
-
-
-@mark.filterwarnings(warning)
 def test_empty_dag(
     dag_bag: DagBag,
 ) -> None:
