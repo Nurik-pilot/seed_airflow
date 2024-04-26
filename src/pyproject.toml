@@ -78,7 +78,7 @@ authors = [
 
 [tool.poetry.dependencies]
 python = "^3.12"
-ipython = "^8.23.0"
+ipython = "^8.24.0"
 virtualenv = "^20.26.0"
 wheel = "^0.43.0"
 orjson = "^3.10.1"
