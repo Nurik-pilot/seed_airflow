@@ -74,7 +74,7 @@ case "$PROCESS" in
       poetry install --no-root
     fi
     airflow celery flower \
-    --basic-auth=1:1
+    --basic-auth "1:1"
     ;;
 "TEST")
     wait_backing_services
