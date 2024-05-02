@@ -81,7 +81,7 @@ python = "^3.12"
 ipython = "^8.24.0"
 virtualenv = "^20.26.1"
 wheel = "^0.43.0"
-orjson = "^3.10.1"
+orjson = "^3.10.2"
 
 [tool.poetry.group.dev.dependencies]
 bandit = "^1.7.8"
@@ -122,7 +122,7 @@ mypy = "^1.10.0"
 blocklint = "^0.2.4"
 doit = "^0.36.0"
 ruff = "^0.4.0"
-safety = "^3.1.0"
+safety = "^3.2.0"
 
 [build-system]
 requires = [

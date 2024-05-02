@@ -23,6 +23,14 @@ def test_no_import_errors(
     ) == 0
 
 
+def test_dag_ids(
+    dag_bag: DagBag,
+) -> None:
+    assert dag_bag.dag_ids == [
+        'empty',
+    ]
+
+
 def test_dags_count(
     dag_bag: DagBag,
 ) -> None:
