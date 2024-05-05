@@ -38,9 +38,6 @@ RUN apt update \
     && echo "UTC" > /etc/timezone \
 # Upgrade pip
     && pip install --upgrade pip \
-# Add project dependencies \
-    && echo "pip install $PACKAGE" \
-    && echo "--constraint $CONSTRAINT" \
     && pip install $PACKAGE \
     --constraint $CONSTRAINT \
     && pip install poetry \
