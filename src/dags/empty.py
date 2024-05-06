@@ -29,8 +29,9 @@ with DAG(
     dag_id='empty',
     schedule='@daily',
     start_date=datetime(
-        year=2024, month=3,
-        day=20, tzinfo=UTC,
+        year=2024, month=5, day=6,
+        hour=0, minute=0, second=0,
+        microsecond=0, tzinfo=UTC,
     ),
 ):
     first_task = EmptyOperator(
