@@ -28,7 +28,7 @@ case "$PROCESS" in
     if [ "$ENV" == "LOCAL" ]
     then
       wait_backing_services
-      poetry install --no-root
+      poetry install
     fi
     airflow db migrate
     if [ "$ENV" == "LOCAL" ]
@@ -50,7 +50,7 @@ case "$PROCESS" in
     then
       wait_backing_services
       wait_for web 8000
-      poetry install --no-root
+      poetry install
     fi
     airflow db migrate
     echo "setup is done!^_^"
@@ -61,7 +61,7 @@ case "$PROCESS" in
     then
       wait_backing_services
       wait_for web 8000
-      poetry install --no-root
+      poetry install
     fi
     airflow celery worker \
     --pid /tmp/airflow-worker.pid
@@ -71,7 +71,7 @@ case "$PROCESS" in
     then
       wait_backing_services
       wait_for web 8000
-      poetry install --no-root
+      poetry install
     fi
     airflow celery flower \
     --basic-auth "1:1"
@@ -102,7 +102,7 @@ case "$PROCESS" in
     doit safety \
     && apt install --yes curl \
     && curl -sSfL $url >> $file \
-    && sh install.sh -b /usr/local/bin \
+    && sh $file -b /usr/local/bin \
     && grype . --fail-on CRITICAL
     ;;
 *)

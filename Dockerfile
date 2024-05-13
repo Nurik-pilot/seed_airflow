@@ -1,19 +1,9 @@
 FROM python:3.12.3-slim
 
-ARG FIRST_PART="celery,postgres,sentry"
-ARG SECOND_PART="s3,cncf.kubernetes,redis"
-ARG EXTENSIONS="$FIRST_PART,$SECOND_PART"
-ARG HOST="https://raw.githubusercontent.com"
-ARG URI="apache/airflow"
-ARG BASE_URL="$HOST/$URI"
-ARG AIRFLOW_VERSION="2.9.0"
+ARG AIRFLOW_VERSION="2.9.1"
 ARG PYTHON_VERSION="3.12"
-ARG FIRST="constraints-$AIRFLOW_VERSION"
-ARG SECOND="constraints-$PYTHON_VERSION"
-ARG FILEPATH="$FIRST/$SECOND.txt"
-ARG RAW_PACKAGE="apache-airflow[$EXTENSIONS]"
-ARG PACKAGE="$RAW_PACKAGE==$AIRFLOW_VERSION"
-ARG CONSTRAINT="$BASE_URL/$FILEPATH"
+ARG PACKAGE="apache-airflow[celery,postgres,sentry,s3,cncf.kubernetes,redis]==$AIRFLOW_VERSION"
+ARG CONSTRAINT="https://raw.githubusercontent.com/apache/airflow/constraints-$AIRFLOW_VERSION/constraints-$PYTHON_VERSION.txt"
 
 ENV PYTHONUNBUFFERED=1 COLUMNS=200 \
     PYTHONPATH="/src:$PYTHONPATH" \
@@ -41,7 +31,7 @@ RUN apt update \
     && pip install $PACKAGE \
     --constraint $CONSTRAINT \
     && pip install poetry \
-    && poetry install --no-root \
+    && poetry install \
 # Remove build dependencies
     && apt purge --yes \
     g++ gcc apt-utils \
