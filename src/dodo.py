@@ -33,7 +33,7 @@ full_test = ' '.join(
 single_test = ' '.join(
     (
         'pytest', '-vs', '{target}',
-        '--disable-pytest-warnings',
+        # '--disable-pytest-warnings',
     ),
 )
 

@@ -2,7 +2,7 @@ FROM python:3.12.3-slim
 
 ARG AIRFLOW_VERSION="2.9.1"
 ARG PYTHON_VERSION="3.12"
-ARG PACKAGE="apache-airflow[celery,postgres,sentry,s3,cncf.kubernetes,redis]==$AIRFLOW_VERSION"
+ARG PACKAGE="apache-airflow[celery,postgres,sentry,s3,cncf.kubernetes,redis,pandas,s3fs,virtualenv]==$AIRFLOW_VERSION"
 ARG CONSTRAINT="https://raw.githubusercontent.com/apache/airflow/constraints-$AIRFLOW_VERSION/constraints-$PYTHON_VERSION.txt"
 
 ENV PYTHONUNBUFFERED=1 COLUMNS=200 \

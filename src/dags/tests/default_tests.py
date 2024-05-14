@@ -11,6 +11,8 @@ from sqlalchemy.orm import Query
 
 from dags.tests.ignored_warnings import (
     pytest_warning,
+    sqlalchemy_warning,
+    deprecation_warning,
 )
 from setup import setup_s3_connection
 
@@ -27,14 +29,14 @@ def test_dag_ids(
     dag_bag: DagBag,
 ) -> None:
     assert dag_bag.dag_ids == [
-        'empty',
+        'empty', 'example',
     ]
 
 
 def test_dags_count(
     dag_bag: DagBag,
 ) -> None:
-    assert dag_bag.size() == 1
+    assert dag_bag.size() == 2
 
 
 def test_connection() -> None:
@@ -65,6 +67,22 @@ def test_empty_dag(
     dag: DAG
     dag = dag_bag.get_dag(
         dag_id='empty',
+    )
+    dag_run: DagRun = dag.test()
+    success = DagRunState.SUCCESS
+    assert dag_run.state == success
+
+
+@mark.filterwarnings(
+    sqlalchemy_warning,
+    deprecation_warning,
+)
+def test_example_dag(
+    dag_bag: DagBag,
+) -> None:
+    dag: DAG
+    dag = dag_bag.get_dag(
+        dag_id='example',
     )
     dag_run: DagRun = dag.test()
     success = DagRunState.SUCCESS

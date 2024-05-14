@@ -145,3 +145,5 @@ logs/
 airflow-webserver.pid
 airflow-worker.pid
 .doit.db
+
+src/requirements.txt
