@@ -1,5 +1,6 @@
 from datetime import datetime, UTC
 from logging import getLogger
+from typing import Any
 
 from airflow import DAG
 from airflow.operators.bash import (
@@ -15,7 +16,14 @@ from airflow.operators.python import (
 logger = getLogger(name=__name__)
 
 
-def print_hello_world() -> None:
+def print_hello_world(
+    logical_date: datetime,
+    **kwargs: dict[str, Any],
+) -> None:
+    logger.info(
+        'logical_date: %s',
+        logical_date.isoformat(),
+    )
     message = ' '.join(
         (
             'hello world by',
@@ -28,14 +36,15 @@ def print_hello_world() -> None:
 with DAG(
     dag_id='empty',
     schedule='@daily',
+    max_active_runs=4,
     start_date=datetime(
-        year=2024, month=5, day=6,
+        year=2024, month=5, day=1,
         hour=0, minute=0, second=0,
         microsecond=0, tzinfo=UTC,
     ),
 ):
-    first_task = EmptyOperator(
-        task_id='first_task',
+    first = EmptyOperator(
+        task_id='first',
     )
     bash_command = ' '.join(
         (
@@ -44,18 +53,18 @@ with DAG(
             'BashOperator',
         ),
     )
-    second_task = BashOperator(
-        task_id='second_task',
+    second = BashOperator(
+        task_id='second',
         bash_command=bash_command,
     )
-    third_task = PythonOperator(
-        task_id='third_task',
+    third = PythonOperator(
+        task_id='third',
         python_callable=print_hello_world,
     )
 
-    first_task.set_downstream(
-        task_or_task_list=second_task,
+    first.set_downstream(
+        task_or_task_list=second,
     )
-    second_task.set_downstream(
-        task_or_task_list=third_task,
+    second.set_downstream(
+        task_or_task_list=third,
     )

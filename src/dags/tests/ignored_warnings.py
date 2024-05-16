@@ -4,20 +4,21 @@ pytest_warning: str = '::'.join(
             (
                 'pytest', ''.join(
                     (
-                        'PytestUnraisable',
-                        'ExceptionWarning',
+                        'Pytest',
+                        'Unraisable',
+                        'Exception',
+                        'Warning',
                     ),
                 ),
             ),
         ),
     ),
 )
-
 sqlalchemy_warning: str = '::'.join(
     (
         'ignore', '.'.join(
             (
-                'sqlalchemy.exc',
+                'sqlalchemy', 'exc',
                 'SAWarning',
             ),
         ),
@@ -25,6 +26,7 @@ sqlalchemy_warning: str = '::'.join(
 )
 deprecation_warning: str = '::'.join(
     (
-        'ignore', 'DeprecationWarning',
+        'ignore',
+        'DeprecationWarning',
     ),
 )

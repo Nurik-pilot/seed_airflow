@@ -11,13 +11,20 @@ from airflow.settings import Session
 from numpy.random import default_rng
 from orjson import loads
 from pandas import DataFrame
+from pendulum import DateTime
 from sqlalchemy import select
 from sqlalchemy.orm import load_only
 
 logger = getLogger(name=__name__)
 
 
-def example() -> str:
+def example(
+    execution_date: DateTime, **kwargs,
+) -> str:
+    logger.info(
+        'execution_date: %s',
+        execution_date.isoformat(),
+    )
     sample: DataFrame = DataFrame(
         data=default_rng().integers(
             low=0, high=100,
@@ -43,7 +50,6 @@ def example() -> str:
         ).one()
         data = loads(connection.extra)
     filename = str(uuid4())
-    now = datetime.now(tz=UTC)
     bucket = 'seed'
     folder = 'files'
     partition = '%Y/%m/%d'
@@ -53,7 +59,7 @@ def example() -> str:
             partition, filename,
         ),
     )
-    upload_to = now.strftime(
+    upload_to = execution_date.strftime(
         format=f's3://{formatted}.parquet',
     )
     storage_options = {
