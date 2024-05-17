@@ -14,19 +14,3 @@ pytest_warning: str = '::'.join(
         ),
     ),
 )
-sqlalchemy_warning: str = '::'.join(
-    (
-        'ignore', '.'.join(
-            (
-                'sqlalchemy', 'exc',
-                'SAWarning',
-            ),
-        ),
-    ),
-)
-deprecation_warning: str = '::'.join(
-    (
-        'ignore',
-        'DeprecationWarning',
-    ),
-)

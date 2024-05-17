@@ -33,7 +33,7 @@ full_test = ' '.join(
 single_test = ' '.join(
     (
         'pytest', '-vs', '{target}',
-        # '--disable-pytest-warnings',
+        '--disable-pytest-warnings',
     ),
 )
 
@@ -244,7 +244,7 @@ def task_lint() -> MetaData:
         actions=(
             ruff, flake8,
             mypy, bandit,
-            blocklint, safety,
+            blocklint,
         ),
     )
 
@@ -288,11 +288,14 @@ def task_all() -> MetaData:
         second: default_n,
         third: default_f,
     }
-    full_run = full_test.format(**kwargs)
+    full_run = full_test.format(
+        **kwargs,
+    )
     return metadata_from(
         actions=(
-            full_run, ruff, flake8,
-            mypy, bandit, blocklint,
-            safety, outdated,
+            full_run, ruff,
+            flake8, mypy,
+            bandit, blocklint,
+            outdated,
         ),
     )

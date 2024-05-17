@@ -12,7 +12,6 @@ from setup import (
 
 expected_dag_ids = [
     'empty',
-    'example',
 ]
 
 

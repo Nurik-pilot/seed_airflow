@@ -2,12 +2,12 @@ from airflow import DAG
 from airflow.models import (
     DagBag, DagRun,
 )
-from airflow.utils.state import (
-    DagRunState,
-)
 from pytest import mark
 
-from dags.tests.ignored_warnings import (
+from dags.tests.functions import (
+    is_successful,
+)
+from dags.tests.ignored import (
     pytest_warning,
 )
 
@@ -23,5 +23,6 @@ def test_empty_dag(
         dag_id='empty',
     )
     dag_run: DagRun = dag.test()
-    success = DagRunState.SUCCESS
-    assert dag_run.state == success
+    assert is_successful(
+        dag_run=dag_run,
+    )

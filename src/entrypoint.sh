@@ -50,7 +50,6 @@ case "$PROCESS" in
     then
       wait_backing_services
       wait_for web 8000
-      poetry install
     fi
     airflow db migrate
     echo "setup is done!^_^"
@@ -61,7 +60,6 @@ case "$PROCESS" in
     then
       wait_backing_services
       wait_for web 8000
-      poetry install
     fi
     airflow celery worker \
     --pid /tmp/airflow-worker.pid
@@ -71,7 +69,6 @@ case "$PROCESS" in
     then
       wait_backing_services
       wait_for web 8000
-      poetry install
     fi
     airflow celery flower \
     --basic-auth "1:1"
