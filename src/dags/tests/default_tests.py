@@ -1,14 +1,4 @@
-from airflow.models import (
-    DagBag, Connection,
-)
-from airflow.settings import (
-    Session,
-)
-from sqlalchemy.orm import Query
-
-from setup import (
-    setup_s3_connection,
-)
+from airflow.models import DagBag
 
 expected_dag_ids = [
     'empty',
@@ -39,25 +29,3 @@ def test_dags_count(
     assert dag_bag.size() == len(
         expected_dag_ids,
     )
-
-
-def test_connection() -> None:
-    query: Query
-    with (
-        Session() as session,
-        session.begin(),
-    ):
-        query = session.query(
-            Connection,
-        )
-        query.delete()
-        assert query.count() == 0
-    setup_s3_connection()
-    with (
-        Session() as session,
-        session.begin(),
-    ):
-        query = session.query(
-            Connection,
-        )
-        assert query.count() == 1

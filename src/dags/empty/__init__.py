@@ -1,6 +1,4 @@
 from datetime import datetime, UTC
-from logging import getLogger
-from typing import Any
 
 from airflow import DAG
 from airflow.operators.bash import (
@@ -13,25 +11,12 @@ from airflow.operators.python import (
     PythonOperator,
 )
 
-logger = getLogger(name=__name__)
-
-
-def print_hello_world(
-    logical_date: datetime,
-    **kwargs: dict[str, Any],
-) -> None:
-    logger.info(
-        'logical_date: %s',
-        logical_date.isoformat(),
-    )
-    message = ' '.join(
-        (
-            'hello world by',
-            'PythonOperator',
-        ),
-    )
-    logger.info(msg=message)
-
+from .bash_commands import (
+    echo_hello_world,
+)
+from .python_callables import (
+    print_hello_world,
+)
 
 with DAG(
     dag_id='empty',
@@ -46,16 +31,9 @@ with DAG(
     first = EmptyOperator(
         task_id='first',
     )
-    bash_command = ' '.join(
-        (
-            'echo hello',
-            'world by',
-            'BashOperator',
-        ),
-    )
     second = BashOperator(
         task_id='second',
-        bash_command=bash_command,
+        bash_command=echo_hello_world,
     )
     third = PythonOperator(
         task_id='third',
