@@ -14,12 +14,9 @@ wait_backing_services () {
 
 create_default_user () {
   airflow users create \
-  --username 1 \
-  --password 1 \
-  --firstname 1 \
-  --lastname 1 \
-  --role Admin \
-  --email asd@asd.asd
+  --username 1 --password 1 \
+  --firstname 1 --lastname 1 \
+  --role Admin --email asd@asd.asd
 }
 
 export $(xargs < /src/core/.env)

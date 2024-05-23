@@ -1,7 +1,6 @@
 from pathlib import Path
 from typing import (
-    Callable, Generator,
-)
+    Callable, Generator, )
 
 from doit import task_params
 
@@ -162,36 +161,39 @@ def task_test(
     coverage_report_path: str = '',
     number_of_processes: int = default_n,
 ) -> MetaData:
-    report_types: dict[str, str] = {
+    report_types: dict[str, str]
+    report_types = {
         '': default_c,
     }
-    report_type: str = report_types.get(
+    report_type: str
+    report_type = report_types.get(
         coverage_report_path,
         f'xml:{coverage_report_path}',
     )
     first = 'coverage_report_type'
+    coverage_kwargs: dict[str, str]
     coverage_kwargs = {
         first: report_type,
     }
     second = 'number_of_processes'
+    parallel_kwargs: dict[str, int]
     parallel_kwargs = {
         second: number_of_processes,
     }
     third = 'flake_runs'
+    flaky_kwargs: dict[str, int]
     flaky_kwargs = {
         third: flake_runs,
     }
-    kwargs = {
+    full_run = full_test.format(
         **coverage_kwargs,
         **parallel_kwargs,
         **flaky_kwargs,
-    }
-    full_run = full_test.format(
-        **kwargs,
     )
     actions: dict[str, str] = {
         '': full_run,
     }
+    single_run: str
     single_run = single_test.format(
         target=target,
     )
@@ -250,7 +252,9 @@ def task_lint() -> MetaData:
 
 
 def fix_requirements() -> None:
-    path = Path('requirements.txt')
+    path = Path(
+        'requirements.txt',
+    )
     text: str = path.read_text()
     lines: list[str]
     lines = text.splitlines()
@@ -269,14 +273,19 @@ def fix_requirements() -> None:
         next(iter(line))
         for line in divided
     )
-    fixed: str = '\n'.join(truncated)
+    fixed: str
+    fixed = '\n'.join(truncated)
     data: str = fixed + '\n'
     path.write_text(data=data)
 
 
 def task_export() -> MetaData:
-    actions = (export, fix_requirements,)
-    return metadata_from(actions=actions)
+    actions: Actions = (
+        export, fix_requirements,
+    )
+    return metadata_from(
+        actions=actions,
+    )
 
 
 def task_all() -> MetaData:
