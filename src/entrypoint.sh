@@ -11,14 +11,16 @@ wait_backing_services () {
   wait_for "${DB_HOST}" "${DB_PORT}"
   wait_for "${BROKER_HOST}" "${BROKER_PORT}"
 }
-remove_useless () {
-  rm -rf /src/logs \
-  celerybeat-schedule \
-  airflow-webserver.pid \
-  airflow-worker.pid
-}
 
-remove_useless
+create_default_user () {
+  airflow users create \
+  --username 1 \
+  --password 1 \
+  --firstname 1 \
+  --lastname 1 \
+  --role Admin \
+  --email asd@asd.asd
+}
 
 export $(xargs < /src/core/.env)
 echo "env variables are populated!^_^"
@@ -31,16 +33,10 @@ case "$PROCESS" in
       poetry install
     fi
     airflow db migrate
+    python setup.py
     if [ "$ENV" == "LOCAL" ]
     then
-      python setup.py
-      airflow users create \
-      --username 1 \
-      --firstname 1 \
-      --lastname 1 \
-      --role Admin \
-      --email asd@asd.asd \
-      --password 1
+      create_default_user
     fi
     airflow webserver --pid \
     /tmp/airflow-webserver.pid
@@ -48,17 +44,16 @@ case "$PROCESS" in
 "AIRFLOW_SCHEDULER")
     if [ "$ENV" == "LOCAL" ]
     then
-      wait_backing_services
       wait_for web 8000
     fi
     airflow db migrate
     echo "setup is done!^_^"
-    airflow scheduler
+    airflow scheduler --pid \
+    /tmp/airflow-scheduler.pid
     ;;
 "AIRFLOW_CONSUMER")
     if [ "$ENV" == "LOCAL" ]
     then
-      wait_backing_services
       wait_for web 8000
     fi
     airflow celery worker \
@@ -67,7 +62,6 @@ case "$PROCESS" in
 "AIRFLOW_FLOWER")
     if [ "$ENV" == "LOCAL" ]
     then
-      wait_backing_services
       wait_for web 8000
     fi
     airflow celery flower \
@@ -77,15 +71,9 @@ case "$PROCESS" in
     wait_backing_services
     airflow db migrate \
     && python setup.py \
-    && airflow users create \
-    --username 1 \
-    --password 1 \
-    --firstname 1 \
-    --lastname 1 \
-    --email asd@asd.asd \
-    --role Admin \
+    && create_default_user \
     && doit test \
-    --number_of_processes 2 \
+    --number_of_processes 1 \
     --coverage_report_path \
     "$CI_PROJECT_DIR"/src/cov.xml \
     && doit lint
