@@ -94,7 +94,7 @@ python = "^3.12"
 ipython = "^8.24.0"
 wheel = "^0.43.0"
 orjson = "^3.10.3"
-pyarrow = "^16.1.0"
+polars = {extras = ["fsspec", "pyarrow"], version = "^0.20.28"}
 
 [tool.poetry.group.dev.dependencies]
 bandit = "^1.7.8"

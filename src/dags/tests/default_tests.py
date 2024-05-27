@@ -1,7 +1,7 @@
 from airflow.models import DagBag
 
 expected_dag_ids = [
-    'empty',
+    'empty', 'example',
 ]
 
 
