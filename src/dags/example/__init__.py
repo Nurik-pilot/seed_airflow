@@ -11,7 +11,7 @@ from .python_callables import (
 
 with DAG(
     dag_id='example',
-    schedule='@daily',
+    schedule='@hourly',
     max_active_runs=4,
     start_date=datetime(
         year=2024, month=5, day=1,
