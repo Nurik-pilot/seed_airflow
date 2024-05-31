@@ -1,5 +1,5 @@
-from datetime import datetime
-from logging import getLogger
+from datetime import datetime, UTC
+from logging import getLogger, INFO, WARNING
 
 from airflow import DAG
 from airflow.models import (
@@ -76,15 +76,18 @@ def test_example_dag_not_exists(
 def test_example_dag_exists(
     example_dag: DAG,
 ) -> None:
-    formatted = '2024-05-28T00:00:00+00:00'
-    logical_date = datetime.fromisoformat(
-        formatted,
+    logical_date = datetime(
+        year=2024, month=5, day=28,
+        hour=0, minute=0, second=0,
+        microsecond=0, tzinfo=UTC,
     )
+    formatted = logical_date.isoformat()
     bucket = 'seed'
     template = '/'.join(
         (
-            'files', 'year=%Y', 'month=%m',
-            'day=%d', 'date=%Y%m%d',
+            'files', 'year=%Y',
+            'month=%m', 'day=%d',
+            'date=%Y%m%d',
             f'{formatted}.parquet',
         ),
     )
@@ -131,10 +134,25 @@ def test_example_dag_exists(
     assert is_successful(
         dag_run=dag_run,
     ) is True
+    sqlalchemy_logger = getLogger(
+        name='sqlalchemy.engine',
+    )
+    sqlalchemy_logger.setLevel(
+        level=INFO,
+    )
+    logger.info(
+        msg='sqlalchemy.engine enabled',
+    )
     value = obtain_return_value(
         dag=example_dag,
         dag_run=dag_run,
         task_id='first',
+    )
+    sqlalchemy_logger.setLevel(
+        level=WARNING,
+    )
+    logger.info(
+        msg='sqlalchemy.engine disabled',
     )
     assert value == {
         'bucket': bucket,
