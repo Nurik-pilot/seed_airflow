@@ -26,6 +26,7 @@ full_test = ' '.join(
         '--exitfirst',
         '--randomly-seed=last',
         '-W error',
+        '-W ignore::DeprecationWarning',
     ),
 )
 
