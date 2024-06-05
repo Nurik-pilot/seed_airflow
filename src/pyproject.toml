@@ -91,7 +91,7 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
-ipython = "^8.24.0"
+ipython = "^8.25.0"
 wheel = "^0.43.0"
 orjson = "^3.10.3"
 polars = {extras = ["fsspec", "pyarrow"], version = "^0.20.28"}
@@ -125,7 +125,7 @@ flake8-string-format = "^0.3.0"
 flake8-SQL = "^0.4.1"
 flake8-variables-names = "^0.0.6"
 pep8-naming = "^0.14.1"
-pytest = "^8.2.1"
+pytest = "^8.2.2"
 pytest-cov = "^5.0.0"
 pytest-forked = "^1.6.0"
 pytest-xdist = "^3.6.1"
@@ -136,7 +136,7 @@ mypy = "^1.10.0"
 blocklint = "^0.2.4"
 doit = "^0.36.0"
 ruff = "^0.4.0"
-safety = "^3.2.0"
+safety = "^3.2.1"
 
 [build-system]
 requires = [
