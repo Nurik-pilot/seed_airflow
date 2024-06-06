@@ -95,7 +95,6 @@ ipython = "^8.25.0"
 wheel = "^0.43.0"
 orjson = "^3.10.3"
 polars = {extras = ["fsspec", "pyarrow"], version = "^0.20.28"}
-pyiceberg = {extras = ["hive", "s3fs"], version = "^0.6.1"}
 
 [tool.poetry.group.dev.dependencies]
 bandit = "^1.7.8"

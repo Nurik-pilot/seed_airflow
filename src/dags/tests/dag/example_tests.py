@@ -22,6 +22,10 @@ from dags.tests.functions import (
 
 logger = getLogger(name=__name__)
 
+sqlalchemy_logger = getLogger(
+    name='sqlalchemy.engine',
+)
+
 
 @mark.timeout(timeout=8)
 def test_example_dag_not_exists(
@@ -134,9 +138,6 @@ def test_example_dag_exists(
     assert is_successful(
         dag_run=dag_run,
     ) is True
-    sqlalchemy_logger = getLogger(
-        name='sqlalchemy.engine',
-    )
     sqlalchemy_logger.setLevel(
         level=INFO,
     )
