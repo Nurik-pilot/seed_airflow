@@ -4,6 +4,18 @@ from typing import (
 
 from doit import task_params
 
+type Command = str | Callable[
+    [], None,
+]
+
+type Actions = tuple[
+    Command, ...,
+]
+
+type MetaData = dict[
+    str, Actions | int,
+]
+
 default_c = 'term-missing'
 
 default_n = 1
@@ -53,8 +65,8 @@ ruff: str = 'ruff check .'
 safety = ' -i '.join(
     (
         'safety check',
-        '51457', '62019',
-        '42194', '51668', '67599',
+        '51457', '62019', '42194',
+        '51668', '70612',
     ),
 )
 
@@ -77,14 +89,8 @@ export = ' && '.join(
     (
         ' '.join(
             (
-                'poetry', 'self',
-                'add', '-'.join(
-                    (
-                        'poetry',
-                        'plugin',
-                        'export',
-                    ),
-                ),
+                'poetry self add',
+                'poetry-plugin-export',
             ),
         ),
         ' '.join(
@@ -109,14 +115,6 @@ export = ' && '.join(
 )
 
 default_verbosity = 2
-
-type Command = str | Callable[[], None]
-
-type Actions = tuple[Command, ...]
-
-type MetaData = dict[
-    str, Actions | int,
-]
 
 
 def metadata_from(

@@ -13,7 +13,7 @@ def dag_bag() -> DagBag:
     )
 
 
-@fixture()
+@fixture(scope='session')
 def empty_dag(
     dag_bag: DagBag,
 ) -> DAG:
@@ -22,7 +22,7 @@ def empty_dag(
     )
 
 
-@fixture()
+@fixture(scope='session')
 def example_dag(
     dag_bag: DagBag,
 ) -> DAG:
@@ -42,8 +42,12 @@ def s3_client() -> S3Client:
     host = Variable.get(
         key='s3_host',
     )
+    bucket = Variable.get(
+        key='s3_bucket',
+    )
     return S3Client(
         login=login,
         password=password,
         host=host,
+        bucket=bucket,
     )

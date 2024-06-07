@@ -1,16 +1,34 @@
 from boto3 import client
+from polars import DataFrame
+from pyarrow.fs import (
+    S3FileSystem,
+)
 
-from .models import DeleteResponse
+from .models import (
+    DeleteResponse,
+    ListV2Response,
+)
 
 
 class S3Client:
+    __login: str
+    __password: str
+    __host: str
+    __bucket: str
 
     def __init__(
-        self, login: str,
-        password: str, host: str,
+        self,
+        login: str,
+        password: str,
+        host: str,
+        bucket: str,
     ) -> None:
         super().__init__()
-        self.s3 = client(
+        self.__login = login
+        self.__password = password
+        self.__host = host
+        self.__bucket = bucket
+        self.__s3 = client(
             service_name='s3',
             aws_access_key_id=login,
             aws_secret_access_key=password,
@@ -18,23 +36,43 @@ class S3Client:
         )
 
     def exists(
-        self, bucket: str, key: str,
+        self, key: str,
     ) -> bool:
-        response: dict[str, int]
-        response = self.s3.list_objects_v2(
-            Bucket=bucket,
+        raw = self.__s3.list_objects_v2(
+            Bucket=self.__bucket,
             Prefix=key, MaxKeys=1,
         )
-        return response.get(
-            'KeyCount', 0,
-        ) >= 1
+        validated = ListV2Response.model_validate(
+            obj=raw,
+        )
+        return validated.key_count >= 1
 
     def delete(
-        self, bucket: str, key: str,
+        self, key: str,
     ) -> DeleteResponse:
-        response = self.s3.delete_object(
-            Bucket=bucket, Key=key,
+        raw = self.__s3.delete_object(
+            Bucket=self.__bucket, Key=key,
         )
         return DeleteResponse.model_validate(
-            obj=response,
+            obj=raw,
         )
+
+    def write_dataframe(
+        self, key: str,
+        dataframe: DataFrame,
+    ) -> None:
+        filesystem = S3FileSystem(
+            access_key=self.__login,
+            secret_key=self.__password,
+            endpoint_override=self.__host,
+        )
+        destination = '/'.join(
+            (self.__bucket, key,),
+        )
+        with filesystem.open_output_stream(
+            path=destination,
+        ) as stream:
+            dataframe.write_parquet(
+                file=stream,
+                use_pyarrow=True,
+            )

@@ -41,7 +41,8 @@ def clear_dag_run(
 
 
 def obtain_return_value(
-    dag: DAG, task_id: str,
+    dag: DAG,
+    task_id: str,
     dag_run: DagRun,
 ) -> Any:
     instance: XCom
@@ -61,5 +62,5 @@ def obtain_return_value(
         limited = filtered.limit(
             limit=1,
         )
-        instance = limited.first()
+        instance = limited.one()
     return instance.value

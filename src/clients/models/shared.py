@@ -1,15 +1,19 @@
-from pydantic import BaseModel, Field
+from pydantic import (
+    BaseModel, Field,
+)
 
 
 class HTTPHeaders(BaseModel):
     accept_ranges: str = Field(
         alias='accept-ranges',
     )
-    server: str
+    server: str = Field(
+        alias='server',
+    )
     strict_transport_security: str = Field(
         alias='strict-transport-security',
     )
-    vary: str
+    vary: str = Field(alias='vary')
     x_amz_id_2: str = Field(
         alias='x-amz-id-2',
     )
@@ -22,7 +26,7 @@ class HTTPHeaders(BaseModel):
     x_xss_protection: str = Field(
         alias='x-xss-protection',
     )
-    date: str
+    date: str = Field(alias='date')
 
 
 class ResponseMetadata(BaseModel):
@@ -40,10 +44,4 @@ class ResponseMetadata(BaseModel):
     )
     retry_attempts: int = Field(
         alias='RetryAttempts',
-    )
-
-
-class DeleteResponse(BaseModel):
-    response_metadata: ResponseMetadata = Field(
-        alias='ResponseMetadata',
     )

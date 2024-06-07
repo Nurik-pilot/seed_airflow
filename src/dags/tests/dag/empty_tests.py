@@ -20,4 +20,4 @@ def test_empty_dag(
     dag_run = empty_dag.test()
     assert is_successful(
         dag_run=dag_run,
-    ) is True
+    )

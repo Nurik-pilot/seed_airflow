@@ -2,9 +2,10 @@ from datetime import datetime
 
 from airflow.models import Variable
 from polars import DataFrame
-from pyarrow.fs import S3FileSystem
 
-from clients.s3_client import S3Client
+from clients.s3_client import (
+    S3Client,
+)
 
 
 def write_example_parquet(
@@ -21,7 +22,6 @@ def write_example_parquet(
         minute=0, second=0,
         microsecond=0,
     )
-    bucket = 'seed'
     folder = 'files'
     partition = starts_at.strftime(
         format=template,
@@ -49,16 +49,17 @@ def write_example_parquet(
     host = Variable.get(
         key='s3_host',
     )
+    bucket = Variable.get(
+        key='s3_bucket',
+    )
     s3 = S3Client(
         login=login,
         password=password,
         host=host,
+        bucket=bucket,
     )
-    if s3.exists(
-        bucket=bucket, key=key,
-    ):
+    if s3.exists(key=key):
         return {
-            'bucket': bucket,
             'key': key,
             'exists': True,
         }
@@ -68,23 +69,10 @@ def write_example_parquet(
             'integer': numbers,
         },
     )
-    filesystem = S3FileSystem(
-        access_key=login,
-        secret_key=password,
-        endpoint_override=host,
+    s3.write_dataframe(
+        key=key, dataframe=sample,
     )
-    destination = '/'.join(
-        (bucket, key,),
-    )
-    with filesystem.open_output_stream(
-        path=destination,
-    ) as stream:
-        sample.write_parquet(
-            file=stream,
-            use_pyarrow=True,
-        )
     return {
-        'bucket': bucket,
         'key': key,
         'exists': False,
     }

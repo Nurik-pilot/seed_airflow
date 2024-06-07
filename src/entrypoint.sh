@@ -7,19 +7,22 @@ wait_for () {
     done
     echo "$1:$2 is ready!^_^"
 }
+
 wait_backing_services () {
   wait_for "${DB_HOST}" "${DB_PORT}"
   wait_for "${BROKER_HOST}" "${BROKER_PORT}"
 }
 
-create_default_user () {
+create_test_user () {
   airflow users create \
   --username 1 --password 1 \
   --firstname 1 --lastname 1 \
   --role Admin --email asd@asd.asd
 }
 
-export $(xargs < /src/core/.env)
+set -o allexport
+source /src/core/.env
+set +o allexport
 echo "env variables are populated!^_^"
 
 case "$PROCESS" in
@@ -33,7 +36,7 @@ case "$PROCESS" in
     python setup.py
     if [ "$ENV" == "LOCAL" ]
     then
-      create_default_user
+      create_test_user
     fi
     airflow webserver --pid \
     /tmp/airflow-webserver.pid
@@ -68,7 +71,7 @@ case "$PROCESS" in
     wait_backing_services
     airflow db migrate \
     && python setup.py \
-    && create_default_user \
+    && create_test_user \
     && doit test \
     --number_of_processes 1 \
     --coverage_report_path \

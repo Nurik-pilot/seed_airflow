@@ -3,12 +3,8 @@ from logging import getLogger, INFO, WARNING
 
 from airflow import DAG
 from airflow.models import (
-    DagRun, Variable,
-)
+    DagRun, )
 from polars import DataFrame
-from pyarrow.fs import (
-    S3FileSystem,
-)
 from pytest import mark
 
 from clients.s3_client import (
@@ -22,8 +18,10 @@ from dags.tests.functions import (
 
 logger = getLogger(name=__name__)
 
+engine = 'sqlalchemy.engine'
+
 sqlalchemy_logger = getLogger(
-    name='sqlalchemy.engine',
+    name=engine,
 )
 
 
@@ -36,20 +34,18 @@ def test_example_dag_not_exists(
     logical_date = datetime.fromisoformat(
         formatted,
     )
-    bucket = 'seed'
     template = '/'.join(
         (
-            'files', 'year=%Y', 'month=%m',
-            'day=%d', 'date=%Y%m%d',
+            'files', 'year=%Y',
+            'month=%m', 'day=%d',
+            'date=%Y%m%d',
             f'{formatted}.parquet',
         ),
     )
     key = logical_date.strftime(
         format=template,
     )
-    s3_client.delete(
-        bucket=bucket, key=key,
-    )
+    s3_client.delete(key=key)
     clear_dag_run(
         dag=example_dag,
         logical_date=logical_date,
@@ -70,7 +66,6 @@ def test_example_dag_not_exists(
         task_id='first',
     )
     assert value == {
-        'bucket': bucket,
         'key': key,
         'exists': False,
     }
@@ -79,6 +74,7 @@ def test_example_dag_not_exists(
 @mark.timeout(timeout=8)
 def test_example_dag_exists(
     example_dag: DAG,
+    s3_client: S3Client,
 ) -> None:
     logical_date = datetime(
         year=2024, month=5, day=28,
@@ -86,7 +82,6 @@ def test_example_dag_exists(
         microsecond=0, tzinfo=UTC,
     )
     formatted = logical_date.isoformat()
-    bucket = 'seed'
     template = '/'.join(
         (
             'files', 'year=%Y',
@@ -104,30 +99,10 @@ def test_example_dag_exists(
             'integer': numbers,
         },
     )
-    login = Variable.get(
-        key='s3_login',
+    s3_client.write_dataframe(
+        key=key,
+        dataframe=sample,
     )
-    password = Variable.get(
-        key='s3_password',
-    )
-    host = Variable.get(
-        key='s3_host',
-    )
-    filesystem = S3FileSystem(
-        access_key=login,
-        secret_key=password,
-        endpoint_override=host,
-    )
-    destination = '/'.join(
-        (bucket, key,),
-    )
-    with filesystem.open_output_stream(
-        path=destination,
-    ) as stream:
-        sample.write_parquet(
-            file=stream,
-            use_pyarrow=True,
-        )
     clear_dag_run(
         dag=example_dag,
         logical_date=logical_date,
@@ -137,12 +112,12 @@ def test_example_dag_exists(
     )
     assert is_successful(
         dag_run=dag_run,
-    ) is True
+    )
     sqlalchemy_logger.setLevel(
         level=INFO,
     )
     logger.info(
-        msg='sqlalchemy.engine enabled',
+        '%s enabled', engine,
     )
     value = obtain_return_value(
         dag=example_dag,
@@ -153,10 +128,9 @@ def test_example_dag_exists(
         level=WARNING,
     )
     logger.info(
-        msg='sqlalchemy.engine disabled',
+        '%s disabled', engine,
     )
     assert value == {
-        'bucket': bucket,
         'key': key,
         'exists': True,
     }
