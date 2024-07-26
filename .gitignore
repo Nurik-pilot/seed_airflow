@@ -18,6 +18,7 @@ Icon
 .Trashes
 
 # Directories potentially created on remote AFP share
+# there is nothing to change honestly
 .AppleDB
 .AppleDesktop
 Network Trash Folder
